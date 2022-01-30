@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Fun projects</title>
+    <link href="main.css" rel="stylesheet" type="text/css" />
+    <script src="main.js" defer></script>
+    <script src="https://code.iconify.design/2/2.1.2/iconify.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body class="dark-theme">
+    <div class="grid-container">
+        <!-- LEFT MENU -->
+        <div class="grid-menu animation">
+            <ul class="menu-list not-selectable">
+                <li class="menu-item">
+                    <a class="nav-link" href="#home">
+                        <span class="menu-item-icon iconify" data-icon="ic:outline-home"></span>
+                        <span class="menu-item-text">Home</span>
+                    </a>
+                </li>
+
+                <li class="menu-item ">
+                    <a class="nav-link" href="#about" >
+                        <span class="menu-item-icon iconify" data-icon="ic:outline-info"></span>
+                        <span class="menu-item-text">About me</span>
+                    </a>
+                </li>
+
+                <li class="menu-item">
+                    <a class="collapsible">
+                        <span class="menu-item-icon iconify" data-icon="mdi:web"></span>
+                        <span class="menu-item-text collapsible">Web projects</span>
+                    </a>
+                    <ul class="menu-sublist collapsed">
+                        <a class="nav-link" href="#sudoku-solver">
+                            <li>Sudoku solver</li>
+                        </a>
+                        <a class="nav-link" href="#ssmap">
+                            <li>Salt & Sanctuary Map</li>
+                        </a>
+                    </ul>
+                </li>
+                <li class="menu-item">
+                    <a class="collapsible">
+                        <span class="menu-item-icon iconify" data-icon="file-icons:c-script"></span>
+                        <span class="menu-item-text">C# Projects</span>
+                    </a>
+                    <ul class="menu-sublist collapsed">
+                        <a class="nav-link" href="#minesweeperizer">
+                            <li>Minesweeperizer</li>
+                        </a>
+                    </ul>
+                </li>
+
+                <li class="menu-item">
+                     <hr class="menu-separator"/>
+                </li>
+
+                <li class="menu-item">
+                    <div id="theme-changer" class="not-selectable" onclick="ChangeTheme()">
+                        <span class="menu-item-icon iconify" data-icon="mdi:theme-light-dark"></span>
+                        <span class="menu-item-text">Change theme</span>
+                    </a>
+                </li>
+            </ul>
+
+   
+
+            <script>
+                //collapsible menu
+                let collapssibles = document.getElementsByClassName("collapsible");
+                for (let i = 0; i < collapssibles.length; i++) {
+                    collapssibles[i].addEventListener("click", function () {
+                        let content = this.nextElementSibling;
+                        content.classList.toggle("collapsed");
+                    });
+                }
+
+                //Navigation
+                $(function(){
+                    $(".nav-link").click(function(e){
+                        //e.preventDefault(); //To prevent the default anchor tag behaviour
+                        var url = e.currentTarget.hash;
+                        LoadPage(url);
+                        });
+                });
+
+                //theme changer
+                function ChangeTheme(){
+                    $("body").toggleClass("dark-theme");
+                    if($("body").hasClass("dark-theme")){
+                        localStorage["theme"] = "dark";
+                    }else{
+                        localStorage["theme"] = "light";
+                    }
+                }
+
+                function LoadPage(hash){
+                    $("#loading-spinner").removeClass("not-visible");
+                    switch (hash) {
+                        case '#home':
+                            $("#page-content").load("/home/home.html");
+                            break;
+                        case '#about':
+                            $("#page-content").load("/about/about.html");
+                            break;
+                        case '#sudoku-solver':
+                            $("#page-content").load("/web-projects/sudoku-solver/sudoku-solver.html");
+                            break;
+                        case '#ssmap':
+                            $("#page-content").load("/web-projects/ssmap/ssmap.html");
+                            break;
+                        case '#minesweeperizer':
+                            $("#page-content").load("/csharp-projects/minesweeperizer/minesweeperizer.html");
+                            break;
+                        default:
+                        }
+                        
+                    $("#loading-spinner").addClass("not-visible");
+                   
+                }
+
+                if(localStorage["theme"] == "light"){
+                    $("body").toggleClass("dark-theme");
+                }
+
+            </script>
+        </div>
+
+        <div class="grid-main">
+            <div id="loading-spinner" class="not-visible" >
+                <svg class="spinner" >
+                    <circle class="spinner-path" cx="25" cy="25" r="20" fill="none" stroke-width="5"></circle>
+                </svg> 
+            </div>
+            <div id="page-content">
+                <script>
+                     LoadPage(window.location.hash);
+                    //$("#page-content").load("/home/home.html"); 
+                </script>
+            </div>
+        </div>
+
+</body>

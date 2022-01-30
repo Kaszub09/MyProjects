@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sudoku solver</title>
+    <link href="/web-projects/sudoku-solver/sudoku-solver-main.css" rel="stylesheet" type="text/css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="/web-projects/sudoku-solver/sudoku-solver-solver.js"></script>
+
+</head>
+
+<body>
+    <div>
+        <h1>SUDOKU SOLVER</h1>
+
+        <div>
+            <table id="sudoku-tbody">
+                <tbody id="sudoku-tbody">
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 20px;">
+            <button onclick="SolveSudoku()">Solve</button>
+            <button onclick="ClearTable()" style="margin-left: 40px;">Clear fields</button>
+        </div>
+        <div id="solver-info" style="margin-top: 20px;">
+         
+        </div>
+
+        <script type="text/javascript">
+            //Build sudoku board
+            for(let i =0;i<9;i++){
+                $("#sudoku-tbody").append("<tr id='row" +i+ "''></tr>");
+                for(let j=0;j<9;j++){
+                    $("#row" +i).append("<td><input class='sudoku-input' id='board" + (i*9+j)+"''></td>");
+                }
+            }
+
+            //Input validation (0 or '' means empty field)
+            $(".sudoku-input").on("input",(e)=>{
+                let val = e.target.value;
+                if(val.length>1){
+                    val = val.substring(0,1);
+                }
+                if(val<="9" && val>="0"){
+                    e.target.value =val;
+                }else{
+                    e.target.value ="";
+                }
+            });
+
+            function ParseTableToNumberBoard(){
+                let board = new Array();
+                for(let i =0;i<9;i++){
+                    board[i] = new Array();
+                    for(let j=0;j<9;j++){
+                         board[i][j] = parseInt( $("#board" + (i*9+j))[0].value,10)||0;
+                    }
+                }
+                return board;
+            }
+
+            function ParseNumberBoardToTable(board){
+                for(let i =0;i<9;i++){
+                    for(let j=0;j<9;j++){
+                        $("#board" + (i*9+j))[0].value = board[i][j]==0?"":board[i][j];
+                    }
+                }
+            }
+       
+            function SolveSudoku(){
+                $('#solver-info')[0].textContent = "Solving...";
+                try{
+                        let s = new SudokuSolver();
+                    let res = s.Solve(ParseTableToNumberBoard());
+                    if(res == null){
+                        $('#solver-info')[0].textContent = "Can't be solved, Sudoku is incorrect";
+                    }else{
+                        ParseNumberBoardToTable(res); 
+                        $('#solver-info')[0].textContent = "Solved!";
+                    }
+                }catch(e){
+                    $('#solver-info')[0].textContent = "Unexpected error when trying to solve: " + e.message;
+                }
+
+            }
+
+            function ClearTable(){
+                for(let i =0;i<9;i++){
+                    for(let j=0;j<9;j++){
+                        $("#board" + (i*9+j))[0].value ="";
+                    }
+                }
+                $('#solver-info')[0].textContent = "";
+            }
+
+        </script>
+    </div>
+</body>
